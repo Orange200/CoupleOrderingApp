@@ -1,0 +1,20 @@
+<!--pages/user/user.wxml-->
+<view class="container">
+  <view class="userinfo">
+    <block wx:if="{{!hasLogin}}">
+      <image class="userinfo-avatar" src="/images/avatar_placeholder.png" mode="cover"></image>
+      <button type="primary" class="login-btn" bindtap="login"> 微信授权登录 </button>
+    </block>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      <button class="logout-btn" bindtap="logout">退出登录</button>
+      <!-- 后续可以添加管理员入口等 -->
+      <button wx:if="{{isAdmin}}" class="admin-btn" bindtap="goToAdmin">管理订单</button>
+    </block>
+  </view>
+
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+</view> 

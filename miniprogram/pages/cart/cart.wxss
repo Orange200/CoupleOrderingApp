@@ -1,0 +1,162 @@
+/* pages/cart/cart.wxss */
+.page-container {
+  padding-bottom: 120rpx; /* 为底部结算栏留出空间 */
+}
+
+/* 空购物车样式 */
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+}
+
+.go-shopping-btn {
+  background-color: #FF69B4;
+  color: white;
+  border-radius: 40rpx;
+  padding: 10rpx 60rpx;
+  font-size: 30rpx;
+}
+
+/* 购物车列表样式 */
+.cart-list {
+  background-color: #fff;
+}
+
+.cart-item {
+  display: flex;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.cart-item-image {
+  width: 140rpx;
+  height: 140rpx;
+  margin-right: 20rpx;
+  border-radius: 8rpx;
+  flex-shrink: 0;
+}
+
+.cart-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cart-item-name {
+  font-size: 30rpx;
+  color: #333;
+  /* 最多显示两行 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+}
+
+.cart-item-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15rpx;
+}
+
+.cart-item-price {
+  font-size: 28rpx;
+  color: #FF69B4;
+  font-weight: bold;
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+}
+
+/* 复用首页的加减按钮样式 */
+.control-btn {
+  width: 48rpx;
+  height: 48rpx;
+  line-height: 44rpx;
+  text-align: center;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0 10rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.control-btn.add {
+  background-color: #FF69B4;
+  color: white;
+  border: none;
+}
+
+.control-btn.remove {
+  border: 1rpx solid #FF69B4;
+  background-color: white;
+  color: #FF69B4;
+}
+
+.control-count {
+  font-size: 28rpx;
+  color: #333;
+  min-width: 30rpx;
+  text-align: center;
+}
+
+/* 底部结算栏 */
+.checkout-bar {
+  position: fixed;
+  bottom: 0;
+  /* 如果需要显示在tabBar上方，添加安全区域 */
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  border-top: 1rpx solid #eee;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 99;
+}
+
+.total-info {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.total-price {
+  font-size: 34rpx;
+  color: #FF69B4;
+  font-weight: bold;
+  margin-left: 10rpx;
+}
+
+.submit-btn {
+  background-color: #FF69B4;
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 0 50rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  font-size: 30rpx;
+} 

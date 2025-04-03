@@ -1,0 +1,31 @@
+<!--pages/admin/admin.wxml-->
+<view class="page-container">
+  <view class="order-list">
+    <view wx:if="{{orders.length === 0}}" class="empty-orders">
+      <text>还没有收到任何订单哦~</text>
+    </view>
+    <block wx:else>
+      <view class="order-card" wx:for="{{orders}}" wx:key="orderId">
+        <view class="order-header">
+          <text class="order-user">用户: {{item.userName || '匿名用户'}}</text>
+          <text class="order-time">{{item.formattedTime}}</text>
+        </view>
+        <view class="order-items">
+          <view class="order-item" wx:for="{{item.items}}" wx:for-item="orderItem" wx:key="id">
+            <text class="item-name">{{orderItem.name}}</text>
+            <text class="item-count">x {{orderItem.count}}</text>
+            <text class="item-price">￥{{orderItem.price}}</text>
+          </view>
+        </view>
+        <view class="order-footer">
+          <text class="order-total">总计: ￥{{item.totalPrice}}</text>
+          <text class="order-status {{item.status === 'pending' ? 'status-pending' : 'status-completed'}}">
+            {{item.status === 'pending' ? '待处理' : '已完成'}}
+          </text>
+          <!-- 可以添加 "完成订单" 等操作按钮 -->
+          <button size="mini" wx:if="{{item.status === 'pending'}}" data-orderid="{{item.orderId}}" bindtap="completeOrder">完成订单</button>
+        </view>
+      </view>
+    </block>
+  </view>
+</view> 

@@ -1,0 +1,112 @@
+/* pages/admin/admin.wxss */
+.page-container {
+  padding: 20rpx;
+}
+
+.empty-orders {
+  text-align: center;
+  color: #999;
+  padding: 100rpx 0;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  padding: 25rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 1rpx dashed #eee;
+}
+
+.order-user {
+  font-size: 28rpx;
+  color: #555;
+  font-weight: bold;
+}
+
+.order-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.order-items {
+  margin-bottom: 20rpx;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26rpx;
+  color: #666;
+  padding: 8rpx 0;
+}
+
+.item-name {
+  flex: 2; /* 多分配点空间给名称 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 10rpx;
+}
+
+.item-count {
+  flex: 1;
+  text-align: center;
+  color: #888;
+}
+
+.item-price {
+  flex: 1;
+  text-align: right;
+}
+
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15rpx;
+  border-top: 1rpx dashed #eee;
+}
+
+.order-total {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.order-status {
+  font-size: 26rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-pending {
+  background-color: #fff3e0; /* 浅橙色 */
+  color: #ff9800; /* 橙色 */
+}
+
+.status-completed {
+  background-color: #e8f5e9; /* 浅绿色 */
+  color: #4caf50; /* 绿色 */
+}
+
+.order-footer button {
+  margin-left: 20rpx; /* 与状态文字分开 */
+  background-color: #FF69B4; /* 原来是 var(--primary-color) */
+  color: white;
+  border: none;
+} 

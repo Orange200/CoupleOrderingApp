@@ -1,0 +1,36 @@
+<!--pages/cart/cart.wxml-->
+<view class="page-container">
+  <!-- 购物车为空时显示 -->
+  <view class="empty-cart" wx:if="{{cartItems.length === 0}}">
+    <image class="empty-image" src="/images/cart_empty.png"></image> 
+    <text class="empty-text">购物车还是空的哦~</text>
+    <button class="go-shopping-btn" bindtap="goToIndex">去逛逛</button>
+  </view>
+
+  <!-- 购物车列表 -->
+  <view class="cart-list" wx:else>
+    <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
+      <image class="cart-item-image" src="{{item.image}}" mode="aspectFill"></image>
+      <view class="cart-item-info">
+        <text class="cart-item-name">{{item.name}}</text>
+        <view class="cart-item-bottom">
+          <text class="cart-item-price">￥{{item.price}}</text>
+          <view class="cart-item-controls">
+            <button class="control-btn remove" data-id="{{item.id}}" bindtap="handleQuantityChange" data-action="remove">-</button>
+            <text class="control-count">{{item.count}}</text>
+            <button class="control-btn add" data-id="{{item.id}}" bindtap="handleQuantityChange" data-action="add">+</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部结算栏 -->
+  <view class="checkout-bar" wx:if="{{cartItems.length > 0}}">
+    <view class="total-info">
+      <text>合计: </text>
+      <text class="total-price">￥{{totalPrice}}</text>
+    </view>
+    <button class="submit-btn" bindtap="submitOrder">提交订单</button>
+  </view>
+</view> 
