@@ -1,0 +1,44 @@
+<view class="container">
+  <!-- 图片区域 -->
+  <view class="image-container" bindtap="toggleImagePreview">
+    <image class="food-image {{isPreview ? 'preview-mode' : ''}}" src="{{food.images[0]}}" mode="aspectFill"></image>
+    <view class="preview-overlay" wx:if="{{isPreview}}">
+      <image class="food-image" src="{{food.images[0]}}" mode="aspectFit"></image>
+    </view>
+  </view>
+
+  <!-- 餐品信息 -->
+  <view class="food-info">
+    <view class="food-name">{{food.name}}</view>
+    <view class="food-price">¥{{food.price}}</view>
+
+    <!-- 描述区域 -->
+    <view class="description-section">
+      <view class="section-title">菜品介绍</view>
+      <view class="description-content">{{food.description}}</view>
+    </view>
+
+    <!-- 原料区域 -->
+    <view class="ingredients-section">
+      <view class="section-title">主要原料</view>
+      <view class="ingredients-list">
+        <view class="ingredient-item" wx:for="{{food.ingredients}}" wx:key="name">
+          {{item.name}} {{item.amount}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="action-bar">
+    <view class="price-section">
+      <text class="price-label">合计：</text>
+      <text class="total-price">¥{{totalPrice}}</text>
+    </view>
+    <view class="button-section">
+      <button class="remove-btn" bindtap="removeFromCart" wx:if="{{food.count > 0}}">-</button>
+      <text class="count-text" wx:if="{{food.count > 0}}">{{food.count}}</text>
+      <button class="add-btn" bindtap="addToCart">+</button>
+    </view>
+  </view>
+</view>

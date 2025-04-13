@@ -24,8 +24,17 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    // 每次显示页面时，可以考虑重新计算购物车角标等
-    this.updateCartBadge(); 
+    // 每次显示页面时，从 Storage 同步购物车数据并更新页面状态
+    this.syncCartState(); 
+    // 额外同步菜单项的 count
+    const cart = wx.getStorageSync('cart') || [];
+    const menuItems = this.data.menuItems;
+    const updatedMenuItems = menuItems.map(menuItem => {
+      const cartItem = cart.find(item => item.id === menuItem.id);
+      menuItem.count = cartItem ? cartItem.count : 0;
+      return menuItem;
+    });
+    this.setData({ menuItems: updatedMenuItems });
   },
 
   // 加载模拟菜单数据
@@ -39,20 +48,47 @@ Page({
       { id: 5, name: '肉末茄子', price: 38, image: '/images/menu/item5.png', description: '经典的家常菜，茄子炒至软糯入味，搭配猪肉末的鲜香，调味料丰富，味道香浓。', count: 0 }
       // 添加更多菜品...
     ];
-    // 需要在 /images/menu/ 目录下准备对应的图片
-    this.setData({ menuItems: mockMenu });
+    
+    // --- 初始化时同步购物车状态 ---
+    const cart = wx.getStorageSync('cart') || [];
+    const updatedMenuItems = mockMenu.map(menuItem => {
+        const cartItem = cart.find(item => item.id === menuItem.id);
+        menuItem.count = cartItem ? cartItem.count : 0;
+        return menuItem;
+    });
+    this.setData({ menuItems: updatedMenuItems });
+    this.syncCartState(); // 计算初始总价/数量并更新角标
+  },
+
+  // 新增：同步购物车状态到页面 data (总价、总数、角标)
+  syncCartState() {
+    const cart = wx.getStorageSync('cart') || [];
+    let totalCount = 0;
+    let totalPrice = 0;
+
+    cart.forEach(item => {
+      totalCount += item.count;
+      totalPrice += item.price * item.count;
+    });
+
+    this.setData({
+      // cart: cart, // data.cart 更新意义不大，主要依赖 Storage
+      totalCount: totalCount,
+      totalPrice: totalPrice
+    });
+
+    this.updateCartBadge(totalCount);
   },
 
   // 添加到购物车
   addToCart(event) {
     const itemId = event.currentTarget.dataset.id;
-    const menuItems = this.data.menuItems;
+    const menuItems = this.data.menuItems; 
     const itemIndex = menuItems.findIndex(item => item.id === itemId);
 
     if (itemIndex > -1) {
-      menuItems[itemIndex].count += 1;
-      this.updateCart(menuItems[itemIndex], 'add');
-      this.setData({ menuItems: menuItems }); // 更新菜单项的显示数量
+      // 直接调用 updateCart 处理逻辑和存储
+      this.updateCart(menuItems[itemIndex], 'add'); 
     }
   },
 
@@ -62,58 +98,48 @@ Page({
     const menuItems = this.data.menuItems;
     const itemIndex = menuItems.findIndex(item => item.id === itemId);
 
-    if (itemIndex > -1 && menuItems[itemIndex].count > 0) {
-      menuItems[itemIndex].count -= 1;
+    // 确保 item 存在且 count > 0 才调用 updateCart
+    if (itemIndex > -1 && menuItems[itemIndex].count > 0) { 
       this.updateCart(menuItems[itemIndex], 'remove');
-      this.setData({ menuItems: menuItems }); // 更新菜单项的显示数量
     }
   },
 
-  // 更新购物车数据和总价/总数
+  // 更新购物车数据(Storage)和页面显示
   updateCart(item, action) {
-    let cart = this.data.cart;
-    let totalPrice = this.data.totalPrice;
-    let totalCount = this.data.totalCount;
+    let cart = wx.getStorageSync('cart') || []; 
+    const menuItems = this.data.menuItems; 
     const cartItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
 
     if (action === 'add') {
       if (cartItemIndex > -1) {
         cart[cartItemIndex].count += 1;
       } else {
-        // 第一次添加时，item里已经有count=1了，但购物车里还没有
-        // 需要创建一个新的对象加入购物车，数量设为1
+        // 首次添加，从 menuItems 来的 item count 是 0，需要设为 1
         cart.push({ ...item, count: 1 }); 
       }
-      totalPrice += item.price;
-      totalCount += 1;
     } else if (action === 'remove') {
       if (cartItemIndex > -1) {
-        // 这里的 item.count 是菜单列表项的数量，可能不准确
-        // 应该用 cart[cartItemIndex].count 判断
         if (cart[cartItemIndex].count > 1) {
           cart[cartItemIndex].count -= 1;
         } else {
-          cart.splice(cartItemIndex, 1); // 数量减到0，从购物车移除
+          cart.splice(cartItemIndex, 1);
         }
-        totalPrice -= item.price;
-        totalCount -= 1;
       }
     }
 
-    this.setData({
-      // 注意：这里更新的是首页的临时购物车cart，它只在添加时被修改
-      // 购物车页面直接读取Storage，所以这里可以不清空，但为了逻辑清晰可以考虑也同步
-      // cart: cart, 
-      totalPrice: totalPrice,
-      totalCount: totalCount
-    });
+    // 更新 Storage
+    wx.setStorageSync('cart', cart);
 
-    // 更新购物车角标
-    this.updateCartBadge(totalCount); // 传递 totalCount
+    // 更新菜单列表项的显示 count (重要！)
+    const itemIndexInMenu = menuItems.findIndex(menuItem => menuItem.id === item.id);
+    if (itemIndexInMenu > -1) {
+        const cartItem = cart.find(ci => ci.id === item.id); // 从更新后的 cart 获取 count
+        menuItems[itemIndexInMenu].count = cartItem ? cartItem.count : 0;
+        this.setData({ menuItems: menuItems }); // 更新页面显示
+    }
     
-    // --- 将更新后的购物车数据保存到 Storage --- 
-    wx.setStorageSync('cart', cart); 
-    console.log('Cart updated in storage:', wx.getStorageSync('cart'));
+    // 同步总价、总数和角标
+    this.syncCartState(); 
   },
 
   // 更新 TabBar 购物车角标
@@ -137,6 +163,14 @@ Page({
     // 这里为了简单，暂时直接存在页面 data 中，跳转时不传递，购物车页自己管理或读取 Storage
     wx.switchTab({ // 跳转到 tabBar 页面需要用 switchTab
       url: '../cart/cart'
+    });
+  },
+
+  // 跳转到详情页
+  goToDetail(event) {
+    const id = event.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: `/pages/food-detail/food-detail?id=${id}`
     });
   },
 

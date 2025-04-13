@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/cart/cart",
     "pages/user/user",
-    "pages/admin/admin"
+    "pages/admin/admin",
+    "pages/food-detail/food-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",
